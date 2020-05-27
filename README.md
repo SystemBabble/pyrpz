@@ -1,0 +1,74 @@
+# pyrpz
+
+## RPZ Zone File Generation Tool
+Converts newline delimited domain lists into BIND style RPZ Zone files.
+
+## Basic Usage
+```
+$ # Display help string
+$ python3 pyrpz/ --help
+```
+
+```
+$ # Downloads and converts a domain list into an RPZ Zone file.
+$ # Printing the result to stdout
+$ python3 pyrpz/ --url "https://domain-bl.example.com/list.txt"
+```
+
+```
+$ # The same as above, but writing to a file instead.
+$ python3 pyrpz/ --url "https://domain-bl.example.com/list.txt" --outfile "/tmp/pyrpz.rpz"
+```
+
+```
+$ # Input can be from a local file.
+$ python3 pyrpz/ --infile "~/domain.list" --outfile "/tmp/pyrpz.rpz"
+```
+
+```
+$ # An example of SOA configuration.
+$ python3 pyrpz/ --infile "~/domain.list" --mmname "pyrpz.rpz" --serial 2020052601 --refresh 3600 --retry 1800 --expire 604800 --ttl 86400 --nameserver-addr 10.1.2.3
+```
+
+```
+$ # RPZ Policy Action configuration
+$ python3 pyrpz/ --infile "~/domain.list" --action PASSTHRU
+```
+
+Policy Actions:
+
+* NXDOMAIN
+* NODATA
+* PASSTHRU
+* DROP
+* TCP-Only
+
+### What is this?
+RPZ Response Policy Zones are a DNS Reputation policy tool, used to rewrite DNS responses.
+
+This allows administrators to implement flexible DNS level firewalling.
+
+RPZ Zone files are valid zone files where the RDATA encodes a policy action to be taken.
+
+Zone File Example
+```
+$TTL 172800
+@         SOA          pyrpz.rpz.    root.pyrpz.rpz (172800 86400 7200 3600000 172800)
+@         NS           ns.pyrpz.rpz. ; local rpz zones needs a bogus NS address
+ns.pyrpz.rpz.    IN     A     127.0.0.1 
+example.com.pyrpz.rpz.    CNAME . ; NXDOMAIN
+*.example.com.pyrpz.rpz.   CNAME . ; NXDOMAIN
+```
+
+### Depends
+validators
+
+**see: [requirements.txt](./requirements.txt)**
+
+### Reading
+https://tools.ietf.org/html/draft-ietf-dnsop-dns-rpz-00
+
+https://en.wikipedia.org/wiki/Response_policy_zone
+
+https://dnsrpz.info/
+
