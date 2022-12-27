@@ -1,2 +1,2 @@
 validators==0.14.2
-setuptools==41.6.0
+setuptools==65.5.1
